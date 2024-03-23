@@ -43,7 +43,7 @@ router.get('/post/:id', async (req, res) => {
 
 
     const post = postData.get({ plain: true });
-console.log("@@@@@@@@@@@@@@@@@@", post);
+
 
     res.render('post', {
       ...post,
@@ -92,9 +92,7 @@ router.get('/comment/:id', withAuth, async (req, res) => {
   }]});
 
   const postDataPlain = postData.get({ plain: true });
-  // const user = await User.findByPk(req.session.user_id, {attributes:['name']});
-  // const userPlain = user.get({ plain: true });
-  console.log("~~~~~~~~~~", postDataPlain);
+
   res.render('comment', {postDataPlain, logged_in: req.session.logged_in, userId: req.session.user_id});
 })
 
