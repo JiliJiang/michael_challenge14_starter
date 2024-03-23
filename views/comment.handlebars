@@ -1,0 +1,38 @@
+<div >
+  
+  <h2>{{postDataPlain.title}}</h2>
+  <p>{{postDataPlain.text}}</p>
+  <p>Created by {{postDataPlain.user.name}} on {{format_date postDataPlain.date_created}}</p>
+ 
+  <h3>Comments:</h3>
+  {{#each postDataPlain.comments as |comment| }}
+   <p>{{comment.text}} by {{comment.user.name}}</p> 
+   {{/each}}
+  
+      
+      <div >
+        <h4 >Your comments:</h4>
+        <textarea id="commentText" class="form-input" style="width: 500px; height:200px" ></textarea>
+        <button type="submit" id="btn" userId={{userId}} postId={{postDataPlain.id}} class="btn btn-primary">Submit</button>
+      </div>
+
+
+</div>
+
+<script>
+document.getElementById('btn').addEventListener('click', async function(){
+const postId = document.getElementById('btn').getAttribute('postId')
+const commentText = document.getElementById('commentText').value;
+const userId = document.getElementById('btn').getAttribute('userId')
+const res = await fetch('/api/comments', {
+  method: 'POST',
+  body: JSON.stringify({post_id: postId, text: commentText, user_id: userId}),
+  headers: { 'Content-Type': 'application/json' },
+})
+
+    if (res.ok){
+document.location.replace('/profile');
+    }
+
+})
+</script>

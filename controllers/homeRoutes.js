@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post, User } = require('../models');
+const { Post, User, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
 router.get('/', async (req, res) => {
@@ -35,10 +35,15 @@ router.get('/post/:id', async (req, res) => {
           model: User,
           attributes: ['name'],
         },
+        {model:Comment, include:[User],
+        attributes:['text']}
       ],
     });
 
+
+
     const post = postData.get({ plain: true });
+console.log("@@@@@@@@@@@@@@@@@@", post);
 
     res.render('post', {
       ...post,
@@ -55,7 +60,7 @@ router.get('/profile', withAuth, async (req, res) => {
     // Find the logged in user based on the session ID
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password'] },
-      include: [{ model: Post }],
+      include: [Post],
     });
 
     const user = userData.get({ plain: true });
@@ -78,5 +83,19 @@ router.get('/login', (req, res) => {
 
   res.render('login');
 });
+
+
+router.get('/comment/:id', withAuth, async (req, res) => {
+  const postData = await Post.findByPk(req.params.id, 
+    {include: [User,  
+      {model:Comment, attributes:['text'], include:[User],
+  }]});
+
+  const postDataPlain = postData.get({ plain: true });
+  // const user = await User.findByPk(req.session.user_id, {attributes:['name']});
+  // const userPlain = user.get({ plain: true });
+  console.log("~~~~~~~~~~", postDataPlain);
+  res.render('comment', {postDataPlain, logged_in: req.session.logged_in, userId: req.session.user_id});
+})
 
 module.exports = router;
