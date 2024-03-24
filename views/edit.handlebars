@@ -1,0 +1,41 @@
+<div >
+  
+  <h2>{{postDataPlain.title}}</h2>
+  <p>{{postDataPlain.text}}</p>
+  <p>Created by {{postDataPlain.user.name}} on {{format_date postDataPlain.date_created}}</p>
+ 
+  <h3>Comments:</h3>
+  {{#each postDataPlain.comments as |comment| }}
+   <p>{{comment.text}} by {{comment.user.name}}</p> 
+   {{/each}}
+  
+      
+      <div >
+        <h4 >Edit your post:</h4>
+        <input id='postTitle' placeholder="{{postDataPlain.title}}"/>
+        <textarea id="postText" class="form-input" style="width: 500px; height:200px" >{{postDataPlain.text}}</textarea>
+        <button type="submit" id="btn" userId={{userId}} postId={{postDataPlain.id}} class="btn btn-primary">Submit</button>
+      </div>
+
+
+</div>
+
+<script>
+document.getElementById('btn').addEventListener('click', async function(){
+const postId = document.getElementById('btn').getAttribute('postId')
+const postTitle = document.getElementById('postTitle').value
+const postText = document.getElementById('postText').value;
+const userId = document.getElementById('btn').getAttribute('userId')
+//console.log('postId', postId)
+const res = await fetch(`/api/posts/${postId}`, {
+  method: 'PUT',
+  body: JSON.stringify({title: postTitle, text: postText, user_id: userId}),
+  headers: { 'Content-Type': 'application/json' },
+})
+
+    if (res.ok){
+document.location.replace('/profile');
+    }
+
+})
+</script>

@@ -12,4 +12,9 @@
   <p>
     <a class="btn btn-primary" href="/comment/{{id}}">Comment!</a>
   </p>
+  {{#if sameUser }}
+  <p>
+    <a class="btn btn-primary" href="/edit/{{id}}">Edit!</a>
+  </p>
+  {{/if}}
 </div>
